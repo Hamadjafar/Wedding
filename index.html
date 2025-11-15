@@ -55,7 +55,7 @@
             height: 100%;
             border-radius: 50%;
             background: radial-gradient(circle, #ffffff 0%, currentColor 50%, transparent 70%);
-            animation: corePulse 1.2s ease-out forwards;
+            animation: corePulse 2s ease-out forwards;
             box-shadow: 0 0 50px currentColor, 0 0 100px currentColor, 0 0 150px currentColor;
             filter: blur(0.5px);
             display: block;
@@ -99,7 +99,7 @@
             border-radius: 50%;
             background: currentColor;
             box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
-            animation: particleBurst 1.5s ease-out forwards;
+            animation: particleBurst 2.5s ease-out forwards;
             filter: blur(0.5px);
             display: block;
         }
@@ -113,7 +113,7 @@
             left: -25%;
             border-radius: 50%;
             background: radial-gradient(circle, currentColor 0%, transparent 70%);
-            animation: particleGlow 1.5s ease-out forwards;
+            animation: particleGlow 2.5s ease-out forwards;
             opacity: 0.8;
         }
         
@@ -159,7 +159,7 @@
             transform: translateZ(0);
             background: #FFD700;
             box-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor;
-            animation: sparkleTrail 2s ease-out forwards;
+            animation: sparkleTrail 3s ease-out forwards;
             filter: blur(0.3px);
             display: block !important;
             visibility: visible !important;
@@ -636,10 +636,10 @@
             if (invitationCard && !fireworksInitialized) {
                 fireworksInitialized = true;
                 const isMobile = window.innerWidth <= 768;
-                // Create first burst after a delay
-                setTimeout(() => createFireworkBurst(), isMobile ? 2000 : 1000);
-                // Start periodic fireworks with longer delay
-                setTimeout(startFireworks, isMobile ? 4000 : 3000);
+                // Create first burst after a longer delay (slower)
+                setTimeout(() => createFireworkBurst(), isMobile ? 5000 : 3000);
+                // Start periodic fireworks with much longer delay
+                setTimeout(startFireworks, isMobile ? 8000 : 6000);
             }
         }
         
@@ -683,17 +683,17 @@
             core.style.opacity = '1';
             invitationCard.appendChild(core);
             
-            // Remove core after animation
+            // Remove core after animation (slower)
             setTimeout(() => {
                 if (core.parentNode) {
                     core.parentNode.removeChild(core);
                 }
-            }, 1200);
+            }, 2000);
             
-            // Create circular burst particles - Reduced for mobile performance
+            // Create circular burst particles - Much less for better performance
             const isMobile = window.innerWidth <= 768;
-            const particleCount = isMobile ? 8 : 12; // Reduced from 20 to 8-12
-            const radius = isMobile ? 60 : 80; // Reduced from 120 to 60-80
+            const particleCount = isMobile ? 4 : 6; // Further reduced from 8-12 to 4-6
+            const radius = isMobile ? 50 : 60; // Further reduced from 60-80 to 50-60
             
             for (let i = 0; i < particleCount; i++) {
                 const angle = (i * 360 / particleCount) * (Math.PI / 180);
@@ -723,12 +723,12 @@
                 
                 invitationCard.appendChild(particle);
                 
-                // Remove particle after animation
+                // Remove particle after animation (slower)
                 setTimeout(() => {
                     if (particle.parentNode) {
                         particle.parentNode.removeChild(particle);
                     }
-                }, 1500);
+                }, 2500);
                 
                 // Create sparkle trail behind particle - Skip on mobile for performance
                 if (!isMobile) {
@@ -748,17 +748,17 @@
                     
                     invitationCard.appendChild(trail);
                     
-                    // Remove trail after animation
+                    // Remove trail after animation (slower)
                     setTimeout(() => {
                         if (trail.parentNode) {
                             trail.parentNode.removeChild(trail);
                         }
-                    }, 2000);
+                    }, 3000);
                 }
             }
             
-            // Create additional random sparkles - Reduced for mobile performance
-            const extraSparkles = isMobile ? 0 : 3; // Skip on mobile, 3 on desktop (reduced from 8)
+            // Create additional random sparkles - Removed completely for better performance
+            const extraSparkles = 0; // Completely removed
             for (let i = 0; i < extraSparkles; i++) {
                 const sparkleAngle = Math.random() * 2 * Math.PI;
                 const sparkleDistance = radius * (0.3 + Math.random() * 0.7);
@@ -803,12 +803,12 @@
             }
         }
         
-        // Create fireworks periodically - Less frequent for better performance
+        // Create fireworks periodically - Much less frequent for better performance
         function startFireworks() {
             const isMobile = window.innerWidth <= 768;
             createFireworkBurst();
-            // Increased interval: mobile 5-8 seconds, desktop 3-5 seconds
-            const interval = isMobile ? (Math.random() * 3000 + 5000) : (Math.random() * 2000 + 3000);
+            // Much longer interval: mobile 10-15 seconds, desktop 8-12 seconds
+            const interval = isMobile ? (Math.random() * 5000 + 10000) : (Math.random() * 4000 + 8000);
             setTimeout(startFireworks, interval);
         }
         
