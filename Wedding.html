@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دعوة زفاف - حمد ونادين</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&family=Cairo:wght@300;400;600;700&family=Tajawal:wght@300;400;500;700&family=Dancing+Script:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Amiri', serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Enhanced Fireworks Animation */
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .firework::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: inherit;
+            border-radius: 50%;
+            animation: explode 1.5s ease-out forwards;
+            box-shadow: 0 0 20px currentColor;
+        }
+        
+        .firework::after {
+            content: '';
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            background: radial-gradient(circle, transparent 30%, currentColor 70%);
+            border-radius: 50%;
+            animation: expand 1.5s ease-out forwards;
+            opacity: 0.6;
+        }
+        
+        @keyframes explode {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(25);
+                opacity: 0.9;
+            }
+            100% {
+                transform: scale(50);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes expand {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 0;
+            }
+        }
+        
+        /* Sparkle particles */
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #FFD700;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 2;
+            animation: sparkleFall 2s linear forwards;
+        }
+        
+        @keyframes sparkleFall {
+            0% {
+                transform: translate(0, 0) rotate(0deg) scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(calc(var(--deltaX, 0px)), calc(var(--deltaY, -100px))) rotate(180deg) scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(calc(var(--deltaX, 0px) * 2), calc(var(--deltaY, -100px) * 2)) rotate(360deg) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        /* Container */
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Invitation Card */
+        .invitation-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9ff);
+            border-radius: 20px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .invitation-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+        
+        /* Header */
+        .header {
+            margin-bottom: 30px;
+        }
+        
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            color: #8B4513;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 20px;
+        }
+        
+        /* Names */
+        .names {
+            margin: 30px 0;
+        }
+        
+        .formal-invitation {
+            font-family: 'Scheherazade New', 'Amiri', serif;
+            font-size: 1.4rem;
+            color: #555;
+            line-height: 2;
+            margin-bottom: 25px;
+        }
+        
+        .parents-names {
+            font-family: 'Cairo', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #8B4513;
+            margin: 10px 0;
+        }
+        
+        .invitation-text {
+            font-family: 'Tajawal', sans-serif;
+            font-size: 1.3rem;
+            color: #666;
+            margin: 20px 0;
+            font-weight: 400;
+        }
+        
+        .couple-names {
+            font-family: 'Cairo', sans-serif;
+            font-size: 3rem;
+            font-weight: bold;
+            color: #8B4513;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            letter-spacing: 2px;
+        }
+        
+        .ampersand {
+            font-size: 2.5rem;
+            color: #DAA520;
+            margin: 0 15px;
+            font-weight: normal;
+        }
+        
+        /* Date and Venue */
+        .event-details {
+            background: linear-gradient(135deg, #f8f9ff, #e8f0ff);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border: 2px solid #DAA520;
+        }
+        
+        .date {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #8B4513;
+            margin-bottom: 15px;
+        }
+        
+        .day {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .venue {
+            font-size: 1.4rem;
+            color: #8B4513;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+        
+        /* Countdown Timer */
+        .countdown {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .countdown-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+        
+        .countdown-timer {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .time-unit {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            padding: 15px 10px;
+            min-width: 80px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .time-number {
+            font-size: 2rem;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .time-label {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            opacity: 0.9;
+        }
+        
+        /* Decorative Elements */
+        .decoration {
+            font-size: 2rem;
+            color: #DAA520;
+            margin: 20px 0;
+        }
+        
+        /* Footer */
+        .footer {
+            margin-top: 30px;
+            font-size: 1.1rem;
+            color: #666;
+            font-style: italic;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .invitation-card {
+                padding: 25px 20px;
+            }
+            
+            .title {
+                font-size: 2.2rem;
+            }
+            
+            .couple-names {
+                font-size: 2rem;
+            }
+            
+            .parents-names {
+                font-size: 1.3rem;
+            }
+            
+            .invitation-text {
+                font-size: 1.1rem;
+            }
+            
+            .formal-invitation {
+                font-size: 1.2rem;
+            }
+            
+            .date {
+                font-size: 1.5rem;
+            }
+            
+            .countdown-timer {
+                gap: 10px;
+            }
+            
+            .time-unit {
+                min-width: 70px;
+                padding: 12px 8px;
+            }
+            
+            .time-number {
+                font-size: 1.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .title {
+                font-size: 1.8rem;
+            }
+            
+            .couple-names {
+                font-size: 1.6rem;
+            }
+            
+            .ampersand {
+                font-size: 1.5rem;
+            }
+            
+            .parents-names {
+                font-size: 1.1rem;
+            }
+            
+            .invitation-text {
+                font-size: 1rem;
+            }
+            
+            .formal-invitation {
+                font-size: 1rem;
+            }
+            
+            .countdown-timer {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .time-unit {
+                width: 100px;
+            }
+        }
+        
+        /* Animation for card entrance */
+        .invitation-card {
+            animation: slideInUp 1s ease-out;
+        }
+        
+        @keyframes slideInUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="invitation-card">
+            <div class="header">
+                <h1 class="title">دعوة زفاف</h1>
+                <p class="subtitle">بسم الله الرحمن الرحيم</p>
+            </div>
+            
+            <div class="decoration">✨ ❤️ ✨</div>
+            
+            <div class="names">
+                <div class="formal-invitation">
+                    <p>يتشرف</p>
+                    <p class="parents-names">السيد إبراهيم أحمد جعفر</p>
+                    <p>و</p>
+                    <p class="parents-names">السيد محمد زكي الزبن</p>
+                    <p class="invitation-text">بدعوتكم لحضور حفل زفاف ولديهما</p>
+                </div>
+                <div class="couple-names">
+                    حمد<span class="ampersand">&</span>نادين
+                </div>
+            </div>
+            
+            <div class="decoration">💕</div>
+            
+            <div class="event-details">
+                <div class="day">يوم الثلاثاء</div>
+                <div class="date">14 / 4 / 2026</div>
+                <div class="venue">في قاعات النعمان</div>
+            </div>
+            
+            <div class="countdown">
+                <div class="countdown-title">الوقت المتبقي للزفاف</div>
+                <div class="countdown-timer">
+                    <div class="time-unit">
+                        <span class="time-number" id="days">0</span>
+                        <div class="time-label">أيام</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number" id="hours">0</span>
+                        <div class="time-label">ساعات</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number" id="minutes">0</span>
+                        <div class="time-label">دقائق</div>
+                    </div>
+                    <div class="time-unit">
+                        <span class="time-number" id="seconds">0</span>
+                        <div class="time-label">ثواني</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <p>نتشرف بحضوركم الكريم</p>
+                <p>ونسأل الله أن يجعل هذا اليوم مباركاً</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Countdown Timer - Fixed Date Parsing
+        function updateCountdown() {
+            // Create date for April 14, 2026 at 12:00 PM
+            const weddingDate = new Date(2026, 3, 14, 12, 0, 0); // Month is 0-indexed, so 3 = April
+            const now = new Date();
+            const distance = weddingDate.getTime() - now.getTime();
+            
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            } else {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+            }
+        }
+        
+        // Update countdown every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // Enhanced Fireworks Animation
+        function createFirework(x = null, y = null) {
+            const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3', '#FF69B4', '#00CED1', '#FF1493'];
+            const firework = document.createElement('div');
+            firework.className = 'firework';
+            
+            // Random position if not specified
+            firework.style.left = (x || Math.random() * 100) + 'vw';
+            firework.style.top = (y || Math.random() * 100) + 'vh';
+            firework.style.color = colors[Math.floor(Math.random() * colors.length)];
+            
+            document.body.appendChild(firework);
+            
+            // Create sparkle particles
+            createSparkles(firework.style.left, firework.style.top, firework.style.color);
+            
+            // Remove after animation
+            setTimeout(() => {
+                if (firework.parentNode) {
+                    firework.parentNode.removeChild(firework);
+                }
+            }, 1500);
+        }
+        
+        function createSparkles(x, y, color) {
+            for (let i = 0; i < 8; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = x;
+                sparkle.style.top = y;
+                sparkle.style.background = color;
+                
+                // Random direction for sparkles
+                const angle = (i * 45) + Math.random() * 15;
+                const velocity = 50 + Math.random() * 30;
+                const deltaX = Math.cos(angle * Math.PI / 180) * velocity;
+                const deltaY = Math.sin(angle * Math.PI / 180) * velocity;
+                
+                sparkle.style.setProperty('--deltaX', deltaX + 'px');
+                sparkle.style.setProperty('--deltaY', deltaY + 'px');
+                sparkle.style.animation = `sparkleFall 2s linear forwards`;
+                
+                document.body.appendChild(sparkle);
+                
+                // Remove sparkle after animation
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Create multiple fireworks in sequence
+        function createFireworkBurst(x = null, y = null) {
+            for (let i = 0; i < 5; i++) {
+                setTimeout(() => {
+                    createFirework(
+                        x ? parseFloat(x) + (Math.random() - 0.5) * 10 : null,
+                        y ? parseFloat(y) + (Math.random() - 0.5) * 10 : null
+                    );
+                }, i * 150);
+            }
+        }
+        
+        // Create fireworks periodically
+        function startFireworks() {
+            createFirework();
+            setTimeout(startFireworks, Math.random() * 4000 + 2000); // Random interval between 2-6 seconds
+        }
+        
+        // Start fireworks after page loads
+        setTimeout(startFireworks, 2000);
+        
+        // Enhanced interactive fireworks on click
+        document.addEventListener('click', function(e) {
+            const rect = document.body.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width) * 100;
+            const y = ((e.clientY - rect.top) / rect.height) * 100;
+            
+            createFireworkBurst(x, y);
+        });
+        
+        // Add keyboard fireworks (spacebar)
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space') {
+                e.preventDefault();
+                createFireworkBurst();
+            }
+        });
+    </script>
+</body>
+</html>
