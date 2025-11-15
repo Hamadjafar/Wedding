@@ -635,23 +635,22 @@
             }
             if (invitationCard && !fireworksInitialized) {
                 fireworksInitialized = true;
-                // Create first burst immediately
-                createFireworkBurst();
-                // Start periodic fireworks
-                setTimeout(startFireworks, 1000);
+                const isMobile = window.innerWidth <= 768;
+                // Create first burst after a delay
+                setTimeout(() => createFireworkBurst(), isMobile ? 2000 : 1000);
+                // Start periodic fireworks with longer delay
+                setTimeout(startFireworks, isMobile ? 4000 : 3000);
             }
         }
         
         // Create a new firework burst with core and particles
         function createFireworkBurst(x = null, y = null) {
             if (!invitationCard) {
-                console.log('No invitation card found!');
                 return;
             }
             
             const cardRect = invitationCard.getBoundingClientRect();
             if (!cardRect || cardRect.width === 0) {
-                console.log('Card rect not valid!');
                 return;
             }
             
@@ -684,8 +683,6 @@
             core.style.opacity = '1';
             invitationCard.appendChild(core);
             
-            console.log('Created firework core at', leftPercent + '%', topPercent + '%', 'color:', color);
-            
             // Remove core after animation
             setTimeout(() => {
                 if (core.parentNode) {
@@ -693,9 +690,10 @@
                 }
             }, 1200);
             
-            // Create circular burst particles (20 particles in a circle) - More visible
-            const particleCount = 20;
-            const radius = 120; // Distance particles travel from center (in pixels) - Increased for visibility
+            // Create circular burst particles - Reduced for mobile performance
+            const isMobile = window.innerWidth <= 768;
+            const particleCount = isMobile ? 8 : 12; // Reduced from 20 to 8-12
+            const radius = isMobile ? 60 : 80; // Reduced from 120 to 60-80
             
             for (let i = 0; i < particleCount; i++) {
                 const angle = (i * 360 / particleCount) * (Math.PI / 180);
@@ -732,33 +730,36 @@
                     }
                 }, 1500);
                 
-                // Create sparkle trail behind particle - Make it more visible
-                const trail = document.createElement('div');
-                trail.className = 'sparkle-trail';
-                trail.style.left = leftPercent + '%';
-                trail.style.top = topPercent + '%';
-                trail.style.color = color;
-                trail.style.background = color;
-                trail.style.zIndex = '999';
-                trail.style.position = 'absolute';
-                trail.style.display = 'block';
-                trail.style.visibility = 'visible';
-                trail.style.opacity = '1';
-                trail.style.setProperty('--trailX', finalDx * 0.5 + 'px');
-                trail.style.setProperty('--trailY', finalDy * 0.5 + 'px');
-                
-                invitationCard.appendChild(trail);
-                
-                // Remove trail after animation
-                setTimeout(() => {
-                    if (trail.parentNode) {
-                        trail.parentNode.removeChild(trail);
-                    }
-                }, 2000);
+                // Create sparkle trail behind particle - Skip on mobile for performance
+                if (!isMobile) {
+                    const trail = document.createElement('div');
+                    trail.className = 'sparkle-trail';
+                    trail.style.left = leftPercent + '%';
+                    trail.style.top = topPercent + '%';
+                    trail.style.color = color;
+                    trail.style.background = color;
+                    trail.style.zIndex = '999';
+                    trail.style.position = 'absolute';
+                    trail.style.display = 'block';
+                    trail.style.visibility = 'visible';
+                    trail.style.opacity = '1';
+                    trail.style.setProperty('--trailX', finalDx * 0.5 + 'px');
+                    trail.style.setProperty('--trailY', finalDy * 0.5 + 'px');
+                    
+                    invitationCard.appendChild(trail);
+                    
+                    // Remove trail after animation
+                    setTimeout(() => {
+                        if (trail.parentNode) {
+                            trail.parentNode.removeChild(trail);
+                        }
+                    }, 2000);
+                }
             }
             
-            // Create additional random sparkles (8 extra sparkles)
-            for (let i = 0; i < 8; i++) {
+            // Create additional random sparkles - Reduced for mobile performance
+            const extraSparkles = isMobile ? 0 : 3; // Skip on mobile, 3 on desktop (reduced from 8)
+            for (let i = 0; i < extraSparkles; i++) {
                 const sparkleAngle = Math.random() * 2 * Math.PI;
                 const sparkleDistance = radius * (0.3 + Math.random() * 0.7);
                 const sparkleDx = Math.cos(sparkleAngle) * sparkleDistance;
@@ -789,41 +790,35 @@
             }
         }
         
-        // Create multiple fireworks in sequence for a bigger burst
+        // Create multiple fireworks in sequence for a bigger burst - Reduced for mobile
         function createMultiFireworkBurst(x = null, y = null) {
-            const burstCount = 3;
+            const isMobile = window.innerWidth <= 768;
+            const burstCount = isMobile ? 1 : 2; // Reduced from 3 to 1-2
             for (let i = 0; i < burstCount; i++) {
                 setTimeout(() => {
                     const offsetX = x !== null ? x + (Math.random() - 0.5) * 8 : null;
                     const offsetY = y !== null ? y + (Math.random() - 0.5) * 8 : null;
                     createFireworkBurst(offsetX, offsetY);
-                }, i * 200);
+                }, i * 300); // Increased delay from 200 to 300
             }
         }
         
-        // Create fireworks periodically - More frequent for visibility
+        // Create fireworks periodically - Less frequent for better performance
         function startFireworks() {
+            const isMobile = window.innerWidth <= 768;
             createFireworkBurst();
-            setTimeout(startFireworks, Math.random() * 2000 + 1500); // Random interval between 1.5-3.5 seconds - More frequent
+            // Increased interval: mobile 5-8 seconds, desktop 3-5 seconds
+            const interval = isMobile ? (Math.random() * 3000 + 5000) : (Math.random() * 2000 + 3000);
+            setTimeout(startFireworks, interval);
         }
         
-        // Start fireworks when DOM is ready - Multiple ways to ensure it runs
+        // Start fireworks when DOM is ready - Simplified for better performance
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', initializeFireworks);
         } else {
             // DOM is already ready
-            initializeFireworks();
+            setTimeout(initializeFireworks, 500);
         }
-        
-        // Also try on window load
-        window.addEventListener('load', function() {
-            setTimeout(initializeFireworks, 100);
-        });
-        
-        // Also try after a short delay to ensure everything is loaded
-        setTimeout(initializeFireworks, 200);
-        setTimeout(initializeFireworks, 500);
-        setTimeout(initializeFireworks, 1000);
         
         // Helper function to get coordinates from event (works for both click and touch)
         function getEventCoordinates(e) {
