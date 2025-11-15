@@ -19,91 +19,164 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
         }
         
-        /* Enhanced Fireworks Animation */
-        .firework {
+        /* NEW FIREWORKS SYSTEM - Particle Based with Circular Burst */
+        .firework-container {
             position: absolute;
-            width: 6px;
-            height: 6px;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 999;
+            top: 0;
+            left: 0;
+        }
+        
+        .firework-core {
+            position: absolute !important;
+            width: 12px !important;
+            height: 12px !important;
             border-radius: 50%;
             pointer-events: none;
-            z-index: 1;
+            z-index: 1000 !important;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
         
-        .firework::before {
+        .firework-core::before {
             content: '';
             position: absolute;
             width: 100%;
             height: 100%;
-            background: inherit;
             border-radius: 50%;
-            animation: explode 1.5s ease-out forwards;
-            box-shadow: 0 0 20px currentColor;
+            background: radial-gradient(circle, #ffffff 0%, currentColor 50%, transparent 70%);
+            animation: corePulse 1.2s ease-out forwards;
+            box-shadow: 0 0 50px currentColor, 0 0 100px currentColor, 0 0 150px currentColor;
+            filter: blur(0.5px);
+            display: block;
         }
         
-        .firework::after {
-            content: '';
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            background: radial-gradient(circle, transparent 30%, currentColor 70%);
-            border-radius: 50%;
-            animation: expand 1.5s ease-out forwards;
-            opacity: 0.6;
-        }
-        
-        @keyframes explode {
+        @keyframes corePulse {
             0% {
                 transform: scale(0);
                 opacity: 1;
             }
+            30% {
+                transform: scale(2);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(6);
+                opacity: 0;
+            }
+        }
+        
+        /* Firework Particle - Individual burst particles */
+        .firework-particle {
+            position: absolute !important;
+            width: 10px !important;
+            height: 10px !important;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999 !important;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        .firework-particle::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: currentColor;
+            box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            animation: particleBurst 1.5s ease-out forwards;
+            filter: blur(0.5px);
+            display: block;
+        }
+        
+        .firework-particle::after {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            top: -25%;
+            left: -25%;
+            border-radius: 50%;
+            background: radial-gradient(circle, currentColor 0%, transparent 70%);
+            animation: particleGlow 1.5s ease-out forwards;
+            opacity: 0.8;
+        }
+        
+        @keyframes particleBurst {
+            0% {
+                transform: translate(0, 0) scale(0);
+                opacity: 1;
+            }
+            20% {
+                transform: translate(var(--dx, 0), var(--dy, 0)) scale(2);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(calc(var(--dx, 0) * 3), calc(var(--dy, 0) * 3)) scale(0.5);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes particleGlow {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+            }
             50% {
-                transform: scale(25);
+                transform: scale(1.2);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        
+        /* Sparkle trail effect */
+        .sparkle-trail {
+            position: absolute !important;
+            width: 8px !important;
+            height: 8px !important;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 999 !important;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            background: #FFD700;
+            box-shadow: 0 0 15px currentColor, 0 0 30px currentColor, 0 0 45px currentColor;
+            animation: sparkleTrail 2s ease-out forwards;
+            filter: blur(0.3px);
+            display: block !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        @keyframes sparkleTrail {
+            0% {
+                transform: translate(0, 0) scale(1) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                transform: translate(var(--trailX, 0), var(--trailY, 0)) scale(1.3) rotate(180deg);
                 opacity: 0.9;
             }
             100% {
-                transform: scale(50);
-                opacity: 0;
-            }
-        }
-        
-        @keyframes expand {
-            0% {
-                transform: scale(0);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(1);
-                opacity: 0;
-            }
-        }
-        
-        /* Sparkle particles */
-        .sparkle {
-            position: absolute;
-            width: 3px;
-            height: 3px;
-            background: #FFD700;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 2;
-            animation: sparkleFall 2s linear forwards;
-        }
-        
-        @keyframes sparkleFall {
-            0% {
-                transform: translate(0, 0) rotate(0deg) scale(1);
-                opacity: 1;
-            }
-            50% {
-                transform: translate(calc(var(--deltaX, 0px)), calc(var(--deltaY, -100px))) rotate(180deg) scale(1.2);
-                opacity: 0.8;
-            }
-            100% {
-                transform: translate(calc(var(--deltaX, 0px) * 2), calc(var(--deltaY, -100px) * 2)) rotate(360deg) scale(0.5);
+                transform: translate(calc(var(--trailX, 0) * 1.5), calc(var(--trailY, 0) * 1.5)) scale(0.2) rotate(360deg);
                 opacity: 0;
             }
         }
@@ -126,6 +199,15 @@
             text-align: center;
             position: relative;
             overflow: hidden;
+            touch-action: pan-y;
+            cursor: pointer;
+        }
+        
+        /* Content wrapper - Text should be below fireworks for visibility */
+        .invitation-card > *:not(.firework-core):not(.firework-particle):not(.sparkle-trail) {
+            position: relative;
+            z-index: 50;
+            pointer-events: auto;
         }
         
         .invitation-card::before {
@@ -343,6 +425,31 @@
             .time-number {
                 font-size: 1.5rem;
             }
+            
+            /* Make new fireworks bigger and clearer on mobile */
+            .firework-core {
+                width: 16px;
+                height: 16px;
+            }
+            
+            .firework-core::before {
+                box-shadow: 0 0 60px currentColor, 0 0 120px currentColor, 0 0 180px currentColor;
+            }
+            
+            .firework-particle {
+                width: 12px;
+                height: 12px;
+            }
+            
+            .firework-particle::before {
+                box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
+            }
+            
+            .sparkle-trail {
+                width: 8px;
+                height: 8px;
+                box-shadow: 0 0 16px currentColor, 0 0 32px currentColor, 0 0 48px currentColor;
+            }
         }
         
         @media (max-width: 480px) {
@@ -377,6 +484,31 @@
             
             .time-unit {
                 width: 100px;
+            }
+            
+            /* Even bigger fireworks on small mobile screens */
+            .firework-core {
+                width: 18px;
+                height: 18px;
+            }
+            
+            .firework-core::before {
+                box-shadow: 0 0 80px currentColor, 0 0 160px currentColor, 0 0 240px currentColor;
+            }
+            
+            .firework-particle {
+                width: 14px;
+                height: 14px;
+            }
+            
+            .firework-particle::before {
+                box-shadow: 0 0 25px currentColor, 0 0 50px currentColor, 0 0 75px currentColor;
+            }
+            
+            .sparkle-trail {
+                width: 10px;
+                height: 10px;
+                box-shadow: 0 0 20px currentColor, 0 0 40px currentColor, 0 0 60px currentColor;
             }
         }
         
@@ -487,51 +619,168 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
         
-        // Enhanced Fireworks Animation
-        function createFirework(x = null, y = null) {
-            const colors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3', '#FF69B4', '#00CED1', '#FF1493'];
-            const firework = document.createElement('div');
-            firework.className = 'firework';
+        // Get reference to invitation card - Ensure it's available
+        let invitationCard = document.querySelector('.invitation-card');
+        
+        // NEW FIREWORKS SYSTEM - Circular Burst with Multiple Particles
+        const fireworkColors = ['#FFD700', '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FECA57', '#FF9FF3', '#FF69B4', '#00CED1', '#FF1493', '#FF4500', '#00FF7F', '#FF1493', '#9370DB'];
+        
+        // Function to initialize fireworks - called when DOM is ready
+        let fireworksInitialized = false;
+        function initializeFireworks() {
+            if (fireworksInitialized) return; // Prevent multiple initializations
             
-            // Random position if not specified
-            firework.style.left = (x || Math.random() * 100) + 'vw';
-            firework.style.top = (y || Math.random() * 100) + 'vh';
-            firework.style.color = colors[Math.floor(Math.random() * colors.length)];
-            
-            document.body.appendChild(firework);
-            
-            // Create sparkle particles
-            createSparkles(firework.style.left, firework.style.top, firework.style.color);
-            
-            // Remove after animation
-            setTimeout(() => {
-                if (firework.parentNode) {
-                    firework.parentNode.removeChild(firework);
-                }
-            }, 1500);
+            if (!invitationCard) {
+                invitationCard = document.querySelector('.invitation-card');
+            }
+            if (invitationCard && !fireworksInitialized) {
+                fireworksInitialized = true;
+                // Create first burst immediately
+                createFireworkBurst();
+                // Start periodic fireworks
+                setTimeout(startFireworks, 1000);
+            }
         }
         
-        function createSparkles(x, y, color) {
+        // Create a new firework burst with core and particles
+        function createFireworkBurst(x = null, y = null) {
+            if (!invitationCard) {
+                console.log('No invitation card found!');
+                return;
+            }
+            
+            const cardRect = invitationCard.getBoundingClientRect();
+            if (!cardRect || cardRect.width === 0) {
+                console.log('Card rect not valid!');
+                return;
+            }
+            
+            let leftPercent, topPercent;
+            
+            // Calculate position
+            if (x !== null && y !== null) {
+                leftPercent = Math.max(5, Math.min(95, x));
+                topPercent = Math.max(5, Math.min(95, y));
+            } else {
+                // Random position within card
+                leftPercent = 15 + Math.random() * 70;
+                topPercent = 15 + Math.random() * 70;
+            }
+            
+            // Select random color
+            const color = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+            
+            // Create core (bright center explosion) - Make it more visible
+            const core = document.createElement('div');
+            core.className = 'firework-core';
+            core.style.left = leftPercent + '%';
+            core.style.top = topPercent + '%';
+            core.style.color = color;
+            core.style.background = color;
+            core.style.zIndex = '1000';
+            core.style.position = 'absolute';
+            core.style.display = 'block';
+            core.style.visibility = 'visible';
+            core.style.opacity = '1';
+            invitationCard.appendChild(core);
+            
+            console.log('Created firework core at', leftPercent + '%', topPercent + '%', 'color:', color);
+            
+            // Remove core after animation
+            setTimeout(() => {
+                if (core.parentNode) {
+                    core.parentNode.removeChild(core);
+                }
+            }, 1200);
+            
+            // Create circular burst particles (20 particles in a circle) - More visible
+            const particleCount = 20;
+            const radius = 120; // Distance particles travel from center (in pixels) - Increased for visibility
+            
+            for (let i = 0; i < particleCount; i++) {
+                const angle = (i * 360 / particleCount) * (Math.PI / 180);
+                const dx = Math.cos(angle) * radius;
+                const dy = Math.sin(angle) * radius;
+                
+                // Add some randomness to the angle
+                const randomAngle = angle + (Math.random() - 0.5) * 0.5;
+                const randomRadius = radius * (0.7 + Math.random() * 0.6);
+                const finalDx = Math.cos(randomAngle) * randomRadius;
+                const finalDy = Math.sin(randomAngle) * randomRadius;
+                
+                // Create particle - Make it more visible
+                const particle = document.createElement('div');
+                particle.className = 'firework-particle';
+                particle.style.left = leftPercent + '%';
+                particle.style.top = topPercent + '%';
+                particle.style.color = color;
+                particle.style.background = color;
+                particle.style.zIndex = '999';
+                particle.style.position = 'absolute';
+                particle.style.display = 'block';
+                particle.style.visibility = 'visible';
+                particle.style.opacity = '1';
+                particle.style.setProperty('--dx', finalDx + 'px');
+                particle.style.setProperty('--dy', finalDy + 'px');
+                
+                invitationCard.appendChild(particle);
+                
+                // Remove particle after animation
+                setTimeout(() => {
+                    if (particle.parentNode) {
+                        particle.parentNode.removeChild(particle);
+                    }
+                }, 1500);
+                
+                // Create sparkle trail behind particle - Make it more visible
+                const trail = document.createElement('div');
+                trail.className = 'sparkle-trail';
+                trail.style.left = leftPercent + '%';
+                trail.style.top = topPercent + '%';
+                trail.style.color = color;
+                trail.style.background = color;
+                trail.style.zIndex = '999';
+                trail.style.position = 'absolute';
+                trail.style.display = 'block';
+                trail.style.visibility = 'visible';
+                trail.style.opacity = '1';
+                trail.style.setProperty('--trailX', finalDx * 0.5 + 'px');
+                trail.style.setProperty('--trailY', finalDy * 0.5 + 'px');
+                
+                invitationCard.appendChild(trail);
+                
+                // Remove trail after animation
+                setTimeout(() => {
+                    if (trail.parentNode) {
+                        trail.parentNode.removeChild(trail);
+                    }
+                }, 2000);
+            }
+            
+            // Create additional random sparkles (8 extra sparkles)
             for (let i = 0; i < 8; i++) {
+                const sparkleAngle = Math.random() * 2 * Math.PI;
+                const sparkleDistance = radius * (0.3 + Math.random() * 0.7);
+                const sparkleDx = Math.cos(sparkleAngle) * sparkleDistance;
+                const sparkleDy = Math.sin(sparkleAngle) * sparkleDistance;
+                
                 const sparkle = document.createElement('div');
-                sparkle.className = 'sparkle';
-                sparkle.style.left = x;
-                sparkle.style.top = y;
-                sparkle.style.background = color;
+                sparkle.className = 'sparkle-trail';
+                sparkle.style.left = leftPercent + '%';
+                sparkle.style.top = topPercent + '%';
+                const sparkleColor = fireworkColors[Math.floor(Math.random() * fireworkColors.length)];
+                sparkle.style.color = sparkleColor;
+                sparkle.style.background = sparkleColor;
+                sparkle.style.zIndex = '999';
+                sparkle.style.position = 'absolute';
+                sparkle.style.display = 'block';
+                sparkle.style.visibility = 'visible';
+                sparkle.style.opacity = '1';
+                sparkle.style.setProperty('--trailX', sparkleDx * 0.7 + 'px');
+                sparkle.style.setProperty('--trailY', sparkleDy * 0.7 + 'px');
                 
-                // Random direction for sparkles
-                const angle = (i * 45) + Math.random() * 15;
-                const velocity = 50 + Math.random() * 30;
-                const deltaX = Math.cos(angle * Math.PI / 180) * velocity;
-                const deltaY = Math.sin(angle * Math.PI / 180) * velocity;
+                invitationCard.appendChild(sparkle);
                 
-                sparkle.style.setProperty('--deltaX', deltaX + 'px');
-                sparkle.style.setProperty('--deltaY', deltaY + 'px');
-                sparkle.style.animation = `sparkleFall 2s linear forwards`;
-                
-                document.body.appendChild(sparkle);
-                
-                // Remove sparkle after animation
                 setTimeout(() => {
                     if (sparkle.parentNode) {
                         sparkle.parentNode.removeChild(sparkle);
@@ -540,41 +789,125 @@
             }
         }
         
-        // Create multiple fireworks in sequence
-        function createFireworkBurst(x = null, y = null) {
-            for (let i = 0; i < 5; i++) {
+        // Create multiple fireworks in sequence for a bigger burst
+        function createMultiFireworkBurst(x = null, y = null) {
+            const burstCount = 3;
+            for (let i = 0; i < burstCount; i++) {
                 setTimeout(() => {
-                    createFirework(
-                        x ? parseFloat(x) + (Math.random() - 0.5) * 10 : null,
-                        y ? parseFloat(y) + (Math.random() - 0.5) * 10 : null
-                    );
-                }, i * 150);
+                    const offsetX = x !== null ? x + (Math.random() - 0.5) * 8 : null;
+                    const offsetY = y !== null ? y + (Math.random() - 0.5) * 8 : null;
+                    createFireworkBurst(offsetX, offsetY);
+                }, i * 200);
             }
         }
         
-        // Create fireworks periodically
+        // Create fireworks periodically - More frequent for visibility
         function startFireworks() {
-            createFirework();
-            setTimeout(startFireworks, Math.random() * 4000 + 2000); // Random interval between 2-6 seconds
+            createFireworkBurst();
+            setTimeout(startFireworks, Math.random() * 2000 + 1500); // Random interval between 1.5-3.5 seconds - More frequent
         }
         
-        // Start fireworks after page loads
-        setTimeout(startFireworks, 2000);
+        // Start fireworks when DOM is ready - Multiple ways to ensure it runs
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initializeFireworks);
+        } else {
+            // DOM is already ready
+            initializeFireworks();
+        }
         
-        // Enhanced interactive fireworks on click
-        document.addEventListener('click', function(e) {
-            const rect = document.body.getBoundingClientRect();
-            const x = ((e.clientX - rect.left) / rect.width) * 100;
-            const y = ((e.clientY - rect.top) / rect.height) * 100;
-            
-            createFireworkBurst(x, y);
+        // Also try on window load
+        window.addEventListener('load', function() {
+            setTimeout(initializeFireworks, 100);
         });
         
-        // Add keyboard fireworks (spacebar)
+        // Also try after a short delay to ensure everything is loaded
+        setTimeout(initializeFireworks, 200);
+        setTimeout(initializeFireworks, 500);
+        setTimeout(initializeFireworks, 1000);
+        
+        // Helper function to get coordinates from event (works for both click and touch)
+        function getEventCoordinates(e) {
+            if (!invitationCard) return null;
+            
+            const cardRect = invitationCard.getBoundingClientRect();
+            let clientX, clientY;
+            
+            // Handle touch events
+            if (e.touches && e.touches.length > 0) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else if (e.changedTouches && e.changedTouches.length > 0) {
+                // Touch end event
+                clientX = e.changedTouches[0].clientX;
+                clientY = e.changedTouches[0].clientY;
+            } else {
+                // Mouse event
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+            
+            const clickX = clientX - cardRect.left;
+            const clickY = clientY - cardRect.top;
+            
+            // Check if inside card
+            if (clickX >= 0 && clickX <= cardRect.width && clickY >= 0 && clickY <= cardRect.height) {
+                const x = (clickX / cardRect.width) * 100;
+                const y = (clickY / cardRect.height) * 100;
+                return { x, y };
+            }
+            
+            return null;
+        }
+        
+        // Enhanced interactive fireworks on click - NEW SYSTEM
+        document.addEventListener('click', function(e) {
+            const coords = getEventCoordinates(e);
+            if (coords) {
+                createMultiFireworkBurst(coords.x, coords.y);
+            }
+        });
+        
+        // Touch event support for mobile devices - NEW SYSTEM
+        let touchStartTime = 0;
+        let touchStartCoords = null;
+        let lastTouchMoveTime = 0;
+        
+        document.addEventListener('touchstart', function(e) {
+            touchStartTime = Date.now();
+            touchStartCoords = getEventCoordinates(e);
+            
+            // Create fireworks immediately on touch
+            if (touchStartCoords) {
+                createMultiFireworkBurst(touchStartCoords.x, touchStartCoords.y);
+            }
+        }, { passive: true });
+        
+        document.addEventListener('touchend', function(e) {
+            // Prevent default scrolling if it's a quick tap inside the card
+            const touchDuration = Date.now() - touchStartTime;
+            if (touchDuration < 300 && touchStartCoords) {
+                e.preventDefault();
+            }
+            touchStartCoords = null;
+            lastTouchMoveTime = 0;
+        }, { passive: false });
+        
+        // Touch move - create fireworks while dragging inside card
+        document.addEventListener('touchmove', function(e) {
+            const coords = getEventCoordinates(e);
+            const now = Date.now();
+            // Limit firework creation during touch move to avoid too many
+            if (coords && touchStartTime && now - touchStartTime > 150 && now - lastTouchMoveTime > 100) {
+                createFireworkBurst(coords.x, coords.y);
+                lastTouchMoveTime = now;
+            }
+        }, { passive: true });
+        
+        // Add keyboard fireworks (spacebar) - NEW SYSTEM
         document.addEventListener('keydown', function(e) {
             if (e.code === 'Space') {
                 e.preventDefault();
-                createFireworkBurst();
+                createMultiFireworkBurst();
             }
         });
     </script>
